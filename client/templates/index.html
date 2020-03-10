@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Images Processor</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <script src="/static/jquery-3.4.1.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/90312fa36f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <h1>Simple Image Processor</h1>
+      </div>
+    </nav>
+
+    <div class="container-fluid text-center">    
+      <div class="row content">
+
+        <div class="col-sm-1 sidenav"></div>
+
+        <div class="col-sm-8 text-center"> 
+            <div class="row rowtop text-center">
+                <div class='col'>
+                    <h3>Select an image to process</h3>
+                </div>
+                <div class='col'>
+                    <input type="file" name="oriFile" value="" id="oriFile" class="required borrowerImageFile" data-errormsg="PhotoUploadErrorMsg">
+                </div>
+            </div>
+
+            <div class="row rowtop">
+                <div class='col'>
+                    <div class="container border flex-column text-center">
+                        <h3 class="rowtop">Origin image</h3>
+                        <div class="oriImgHolder rowtop">
+                            <img id="oriImg"  width="300px" />
+                        </div>
+                        <div class="row rowtop"></div>
+                    </div>
+                </div>
+
+                <div class='col'>
+                    <div class="container border flex-column text-center">
+                        <h3 class="rowtop">Processed image</h3>
+                        <div id="newImgHolder" class="rowtop"></div>
+                        <div class="row rowtop"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3 sidenav text-left">
+            <p><button type="button" id="Flip_H" class="btn btn-info">Flip horizontal</button></p>
+            <p><button type="button" class="btn btn-info">Flip vertical</button></p>
+            <p><button type="button" class="btn btn-secondary">Convert to grayscale</button></p>
+            <p><button type="button" class="btn btn-success">Generate a thumbnail</button></p>
+            <p><button type="button" class="btn btn-primary">Rotate left</button></p>
+            <p><button type="button" class="btn btn-primary">Rotate right</button></p>
+            <p><label for="inputPassword2" class="sr-only">Rotate +/- n degrees</label></p>
+            <p><input type="password" class="form-control" id="rotate" placeholder="Password"></p>
+            <p><button type="submit" class="btn btn-primary mb-2">Confirm</button></p>
+            <p><label for="inputPassword2" class="sr-only">Resize</label></p>
+            <p><input type="password" class="form-control" id="resize" placeholder="Password"></p>
+            <p><button type="submit" class="btn btn-primary mb-2">Confirm</button></p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="container-fluid text-center">
+      <p>Footer Text</p>
+    </footer>
+</body>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    function readURL(file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#oriImg').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(file);
+    }
+
+    $("#oriFile").change(function() {
+        readURL(this.files[0]);
+    });
+
+
+
+    $("#Flip_H").click(function(e) {
+        e.preventDefault();
+        var img = 'static/media/' + $('input[type=file]')[0].files[0]['name'];
+        
+        if ( $('#newImg').length > 0) {
+            img = $('#newImg').attr('src');
+        };
+
+        console.log(img);
+
+        var formData = {'file': img, 'action': "Flip_H"};
+        $.ajax({
+            type: 'post',
+            url: '/image',
+            data: formData,
+            success: function (data) {
+                console.log('Submission was successful.');
+                console.log(data.image_url);
+                $( "#newImgHolder" ).empty();
+                $('#newImgHolder').append('<img id="newImg"  src="' + data.image_url + '" width="300px"/>');
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            }
+        });
+    });
+});
+
+</script>
+
+</html>

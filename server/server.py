@@ -1,52 +1,67 @@
 from flask import Flask, request
 import numpy as np
 from cv2 import cv2
+import json
 
 # Initialize the Flask application
 app = Flask(__name__)
 
 
-@app.route('/flip', methods=['POST'])
-def flip():	
-    direction = request.args.get('direction')
+@app.route('/process', methods=['POST'])
+def process():
+    image = request.data
+    params = request.args
+
+    actions = [param for param in params]
+    actions = json.loads(actions[0])
+
     # convert image from string to uint8
-    nparr = np.fromstring(request.data, np.uint8)
+    nparr = np.fromstring(image, np.uint8)
     # decode image
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    # flip image
-    output = ''
-    if direction == 'H':
-        output = cv2.flip(img, 1)
-    elif direction == 'V':
-        output = cv2.flip(img, 0)
 
-    _, img_encoded = cv2.imencode('.jpeg', output)
+    for action in actions:
+
+        if action['action'] == 'flip_H':
+            img = cv2.flip(img, 0)
+            continue
+
+        elif action['action'] == 'flip_V':
+            img = cv2.flip(img, 1)
+            continue
+
+        elif action['action'] == 'rotate_R':
+            img = rotateImage(img, -90)
+            continue
+
+        elif action['action'] == 'rotate_L':
+            img = rotateImage(img, 90)
+            continue
+
+        elif action['action'] == 'rotate':
+            img = rotateImage(img, int(action['param']))
+            continue
+
+        elif action['action'] == 'resize':
+            img = resizeImage(int(action['param']), img)
+            continue
+
+        elif action['action'] == 'thumbnail':
+            img = resizeImage(10, img)
+            continue
+
+        elif action['action'] == 'grayscale':
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            continue
+
+    _, img_encoded = cv2.imencode('.jpeg', img)
 
     return img_encoded.tostring(), 200
 
-
-
-@app.route('/rotateCW', methods=['POST'])
-def rotateCW():	
-    angle = request.args.get('angle')
-    nparr = np.fromstring(request.data, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)   
-    output = rotateImage(img, int('-' + angle))
-    _, img_encoded = cv2.imencode('.jpeg', output)
-
-    return img_encoded.tostring(), 200
-
-@app.route('/rotateCCW', methods=['POST'])
-def rotateCCW():	
-    angle = request.args.get('angle')
-    nparr = np.fromstring(request.data, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)   
-    output = rotateImage(img, int(angle))
-    _, img_encoded = cv2.imencode('.jpeg', output)
-
-    return img_encoded.tostring(), 200
-
-
+def resizeImage(pct, img):
+    width = int(img.shape[1] * pct / 100)
+    height = int(img.shape[0] * pct / 100)
+    return cv2.resize(img, (width, height))
 
 def rotateImage(image, angle):
     image_center = tuple(np.array(image.shape[1::-1]) / 2)

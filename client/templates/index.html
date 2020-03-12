@@ -8,6 +8,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/90312fa36f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script type="text/javascript" src="/static/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/static/jquery.sortable.min.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-inverse">
@@ -21,7 +23,8 @@
 
         <div class="col-sm-1 sidenav"></div>
 
-        <div class="col-sm-8 text-center"> 
+        <div class="col-sm-10 text-center"> 
+
             <div class="row rowtop text-center">
                 <div class='col'>
                     <h3>Select an image to process</h3>
@@ -36,7 +39,8 @@
                     <div class="container border flex-column text-center">
                         <h3 class="rowtop">Origin image</h3>
                         <div class="oriImgHolder rowtop">
-                            <img id="oriImg"  width="300px" />
+                            <img id="oriImg"  /> 
+                            <!-- width="300px" -->
                         </div>
                         <div class="row rowtop"></div>
                     </div>
@@ -50,22 +54,30 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row sideBySide">
+                <div class="col left">
+                  <ul class="source connected">
+                    <li name='flip_H'>Flip Horizontally</li>
+                    <li name='flip_V'>Flip Vertically</li>
+                    <li name='rotate_R'>Rotate Right</li>
+                    <li name='rotate_L'> Rotate Left</li>
+                    <li name='rotate'>Rotate<input type="text" id="deg" name="deg">degrees</li>
+                    <li name='resize'>Resize<input type="text" id="pct" name="pct">%</li>
+                    <li name='thumbnail'>Make Thumbnail</li>
+                    <li name='grayscale'>Make GrayScale</li>
+                  </ul>
+                </div>
+                <div class="col right">
+                  <ul class="target connected">
+                  </ul>
+                </div>
+            </div>
+
+            <div class="row text-center"><button type="button" id="Process" class="btn btn-info">Process Image</button></div>
         </div>
 
-        <div class="col-sm-3 sidenav text-left">
-            <p><button type="button" id="Flip_H" class="btn btn-info">Flip horizontal</button></p>
-            <p><button type="button" class="btn btn-info">Flip vertical</button></p>
-            <p><button type="button" class="btn btn-secondary">Convert to grayscale</button></p>
-            <p><button type="button" class="btn btn-success">Generate a thumbnail</button></p>
-            <p><button type="button" class="btn btn-primary">Rotate left</button></p>
-            <p><button type="button" class="btn btn-primary">Rotate right</button></p>
-            <p><label for="inputPassword2" class="sr-only">Rotate +/- n degrees</label></p>
-            <p><input type="password" class="form-control" id="rotate" placeholder="Password"></p>
-            <p><button type="submit" class="btn btn-primary mb-2">Confirm</button></p>
-            <p><label for="inputPassword2" class="sr-only">Resize</label></p>
-            <p><input type="password" class="form-control" id="resize" placeholder="Password"></p>
-            <p><button type="submit" class="btn btn-primary mb-2">Confirm</button></p>
-        </div>
+        <div class="col-sm-1 sidenav"></div>
       </div>
     </div>
 
@@ -78,6 +90,7 @@
 
   $(document).ready(function() {
 
+    // upload and display image
     function readURL(file) {
         var reader = new FileReader();
         reader.onload = function(e) {
@@ -90,35 +103,50 @@
         readURL(this.files[0]);
     });
 
+    // select and sort actions
+    $(".source, .target").sortable({
+        connectWith: ".connected"
+    });
 
+    // send process request
+    $("#Process").click(function(e) {
+        // e.preventDefault();
+        var items = [];
 
-    $("#Flip_H").click(function(e) {
-        e.preventDefault();
+        $("ul.target").children().each(function() {
+            var item = {action: $(this).attr('name')};
+
+            if($(this).children().length > 0) {
+                item.param = $(this).children().val();
+            };
+            
+            items.push(item);
+        });
+        var jsonItems = JSON.stringify(items);
+        alert(jsonItems);
+
         var img = 'static/media/' + $('input[type=file]')[0].files[0]['name'];
+
+        var imgActions = {'file': img, 'action': jsonItems};
         
-        if ( $('#newImg').length > 0) {
-            img = $('#newImg').attr('src');
-        };
-
-        console.log(img);
-
-        var formData = {'file': img, 'action': "Flip_H"};
         $.ajax({
             type: 'post',
-            url: '/image',
-            data: formData,
+            url: '/process',
+            data: imgActions,
             success: function (data) {
                 console.log('Submission was successful.');
                 console.log(data.image_url);
-                $( "#newImgHolder" ).empty();
-                $('#newImgHolder').append('<img id="newImg"  src="' + data.image_url + '" width="300px"/>');
+                $("#newImgHolder").empty();
+                $('#newImgHolder').append('<img id="newImg"  src="' + data.image_url + '?' + performance.now() + '" />');
             },
             error: function (data) {
                 console.log('An error occurred.');
                 console.log(data);
             }
         });
+
     });
+
 });
 
 </script>

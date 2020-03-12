@@ -14,75 +14,77 @@
 <body>
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
-        <h1>Simple Image Processor</h1>
+        <h1><i class="fas fa-magic"></i>  Simple Image Processor</h1>
       </div>
     </nav>
 
     <div class="container-fluid text-center">    
-      <div class="row content">
+        <div class="row content">
 
-        <div class="col-sm-1 sidenav"></div>
-
-        <div class="col-sm-10 text-center"> 
-
-            <div class="row rowtop text-center">
-                <div class='col'>
-                    <h3>Select an image to process</h3>
-                </div>
-                <div class='col'>
-                    <input type="file" name="oriFile" value="" id="oriFile" class="required borrowerImageFile" data-errormsg="PhotoUploadErrorMsg">
-                </div>
-            </div>
-
-            <div class="row rowtop">
-                <div class='col'>
-                    <div class="container border flex-column text-center">
-                        <h3 class="rowtop">Origin image</h3>
-                        <div class="oriImgHolder rowtop">
-                            <img id="oriImg"  /> 
-                            <!-- width="300px" -->
+            <div class="col-sm-1 sidenav"></div>
+            <div class="col-sm-10 text-center"> 
+                <div class="row rowtop">
+                    <div class='col'>
+                        <div class="container border flex-column">
+                            <h3 class="gray-text">Select an image to process</h3>
+                            <input type="file" name="oriFile" value="" id="oriFile" class="required borrowerImageFile" data-errormsg="PhotoUploadErrorMsg">
                         </div>
-                        <div class="row rowtop"></div>
                     </div>
                 </div>
 
-                <div class='col'>
-                    <div class="container border flex-column text-center">
-                        <h3 class="rowtop">Processed image</h3>
-                        <div id="newImgHolder" class="rowtop"></div>
-                        <div class="row rowtop"></div>
+                <div class="row rowtop">
+                    <div class='col'>
+                        <div class="container border flex-column text-center image-container ">
+                            <h3 class="rowtop blue-text">Original Image</h3>
+                            <div id="oriImgHolder" class="rowtop image-placeholder">
+                                <img id="oriImg"/>
+                            </div>
+                            <div class="row rowtop"></div>
+                        </div>
+                    </div>
+
+                    <div class='col'>
+                        <div class="container border flex-column text-center image-container ">
+                            <h3 class="rowtop orange-text">Processed Image</h3>
+                            <div id="newImgHolder" class="rowtop image-placeholder"></div>
+                            <div class="row rowtop"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row rowtop">
+                    <div class="col">
+                        <div class="container border flex-column text-center operation-container">
+                        <h3 class="rowtop purple-text">Available Operations</h3>
+                        <ul class="source connected">
+                            <li name='flip_H'>Flip Horizontally</li>
+                            <li name='flip_V'>Flip Vertically</li>
+                            <li name='rotate_R'>Rotate Right</li>
+                            <li name='rotate_L'> Rotate Left</li>
+                            <li name='rotate'>Rotate<input type="number" id="deg" name="deg" value=0>degrees</li>
+                            <li name='resize'>Resize<input type="number" min="1" id="pct" name="pct" value=100>%</li>
+                            <li name='thumbnail'>Make Thumbnail</li>
+                            <li name='grayscale'>Make GrayScale</li>
+                        </ul>
+                        <button type="button" id="Refresh" class="btn purple">Refresh List</button>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="container border flex-column text-center operation-container">
+                        <h3 class="rowtop green-text">Chosen Operations</h3>
+                        <ul class="target connected"></ul>
+                        <button type="button" id="Process" class="btn green">Process Image</button>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-sm-1 sidenav"></div>
 
-            <div class="row sideBySide">
-                <div class="col left">
-                  <ul class="source connected">
-                    <li name='flip_H'>Flip Horizontally</li>
-                    <li name='flip_V'>Flip Vertically</li>
-                    <li name='rotate_R'>Rotate Right</li>
-                    <li name='rotate_L'> Rotate Left</li>
-                    <li name='rotate'>Rotate<input type="text" id="deg" name="deg">degrees</li>
-                    <li name='resize'>Resize<input type="text" id="pct" name="pct">%</li>
-                    <li name='thumbnail'>Make Thumbnail</li>
-                    <li name='grayscale'>Make GrayScale</li>
-                  </ul>
-                </div>
-                <div class="col right">
-                  <ul class="target connected">
-                  </ul>
-                </div>
-            </div>
-
-            <div class="row text-center"><button type="button" id="Process" class="btn btn-info">Process Image</button></div>
         </div>
-
-        <div class="col-sm-1 sidenav"></div>
-      </div>
     </div>
 
-    <footer class="container-fluid text-center">
-      <p>Footer Text</p>
+    <footer class="container-fluid text-center footer">
+        <h5><i class="fas fa-magic"></i>  Simple Image Processor</h5>
     </footer>
 </body>
 
@@ -105,12 +107,35 @@
 
     // select and sort actions
     $(".source, .target").sortable({
+      connectWith: ".connected"
+    });
+
+    $('#Refresh').click(function(e) {
+        $( ".source" ).empty();
+        $( ".source" ).append('<li name=\'flip_H\'>Flip Horizontally</li>');
+        $( ".source" ).append('<li name=\'flip_V\'>Flip Vertically</li>');
+        $( ".source" ).append('<li name=\'rotate_R\'>Rotate Right</li>');
+        $( ".source" ).append('<li name=\'rotate_L\'> Rotate Left</li>');
+        $( ".source" ).append('<li name=\'rotate\'>Rotate<input type="number" id="deg" name="deg" value=0>degrees</li>');
+        $( ".source" ).append('<li name=\'resize\'>Resize<input type="number" min="1" id="pct" name="pct" value=100>%</li>');
+        $( ".source" ).append('<li name=\'thumbnail\'>Make Thumbnail</li>');
+        $( ".source" ).append('<li name=\'grayscale\'>Make GrayScale</li>');
+        $(".source, .target").sortable({
         connectWith: ".connected"
+        });
     });
 
     // send process request
     $("#Process").click(function(e) {
         // e.preventDefault();
+
+        // check image
+        if (typeof $('input[type=file]')[0].files[0] == 'undefined') {
+            alert("Please select an image to start.");
+            return;
+        }
+        
+        // get list of operations
         var items = [];
 
         $("ul.target").children().each(function() {
@@ -119,14 +144,17 @@
             if($(this).children().length > 0) {
                 item.param = $(this).children().val();
             };
-            
             items.push(item);
         });
-        var jsonItems = JSON.stringify(items);
-        alert(jsonItems);
+
+        // check operations
+        if (items.length == 0) {
+            alert("Please select at least one operations.");
+            return;
+        }
 
         var img = 'static/media/' + $('input[type=file]')[0].files[0]['name'];
-
+        var jsonItems = JSON.stringify(items);
         var imgActions = {'file': img, 'action': jsonItems};
         
         $.ajax({

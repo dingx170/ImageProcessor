@@ -2,18 +2,15 @@
 .navbar {
   margin-bottom: 0;
   border-radius: 0;
-  background-color: #00CED1;
+  background-color: rgb(112, 176, 236);
+  color: white;
   height: 70px;
 }
-
-/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-/*.row.content {height: 450px}*/
 
 /* Set gray background color and 100% height */
 .sidenav {
   padding-top: 20px;
   background-color: #f1f1f1;
-/*  height: 100%;*/
 }
 
 /* Set black background color, white text and some padding */
@@ -23,16 +20,17 @@ footer {
   padding: 15px;
 }
 
-/* .container {
-  background-color: #f1f1f1;
-} */
-
 .rowtop {
   margin-top: 20px;
 }
 
-.container {
-    min-height: 400px;
+.image-container {
+    min-height: 150px;
+}
+
+.operation-container {
+  min-height: 470px;
+  margin-bottom: 15px;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
@@ -45,22 +43,25 @@ footer {
 }
 
 ul.source, ul.target {
-  min-height: 50px;
-  margin: 0px 25px 10px 0px;
+  margin: 0px 25px 10px 25px;
   padding: 2px;
-  border-width: 1px;
-  border-style: solid;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
   list-style-type: none;
   list-style-position: inside;
 }
+.btn {
+  margin-bottom: 10px;
+}
+
 ul.source {
-  border-color: #f8e0b1;
+  border-color: #c6b1f8;
+  min-height: 50px;
 }
 ul.target {
   border-color: #add38d;
+  min-height: 70px;
 }
 .source li, .target li {
   margin: 5px;
@@ -68,12 +69,11 @@ ul.target {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 .source li {
-  background-color: #fcf8e3;
-  border: 1px solid #fbeed5;
-  color: #c09853;
+  background-color: #e5e3fc;
+  border: 1px solid #e0d5fb;
+  color: #6753c0;
 }
 .target li {
   background-color: #ebf5e6;
@@ -81,18 +81,54 @@ ul.target {
   color: #468847;
 }
 .sortable-dragging {
-  border-color: #ccc !important;
+  border-color: rgb(204, 204, 204) !important;
   background-color: #fafafa !important;
-  color: #bbb !important;
+  color: rgb(187, 187, 187) !important;
 }
 .sortable-placeholder {
   height: 40px;
 }
 .source .sortable-placeholder {
-  border: 2px dashed #f8e0b1 !important;
-  background-color: #fefcf5 !important;
+  border: 2px dashed #d6b1f8 !important;
+  background-color: #f0eafd !important;
 }
 .target .sortable-placeholder {
   border: 2px dashed #add38d !important;
   background-color: #f6fbf4 !important;
+}
+
+.purple {
+  background-color: rgb(138, 127, 230);
+  color: white;
+  font-weight: bold;
+}
+.purple-text {
+  color: rgb(138, 127, 230);
+}
+
+.green {
+  background-color: #7aaa7b;
+  color: white;
+  font-weight: bold;
+}
+.green-text {
+  color: #7aaa7b;
+}
+
+.blue-text {
+  color: rgb(101, 177, 228);
+}
+
+.orange-text {
+  color: rgb(238, 152, 103);
+}
+
+.gray-text {
+  color: rgb(180, 176, 174);
+}
+
+input[type=number] {
+  width: 15%;
+  margin: 8px 10px 8px 10px;
+  box-sizing: border-box;
 }

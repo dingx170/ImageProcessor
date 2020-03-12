@@ -7,10 +7,6 @@ from cv2 import cv2
 addr = 'http://localhost:5001'
 
 process_url = addr + '/process'
-flip_url = addr + '/flip'
-
-rotateCW_url = addr + '/rotateCW'
-rotateCCW_url = addr + '/rotateCCW'
 
 app = Flask(__name__)
 
@@ -22,24 +18,7 @@ def home():
 def process_image():
 	image = request.form['file']
 	actions = request.form['action']
-	print('image ----------- ' + str(type(image)))
-	print('act ty ----------- ' + str(type(actions)))
-	print('act ----------- ')
-	print(actions)
-
-	# params = {'direction' : 'H'}
-	print(image)
-
 	output_name = "static/media/output.jpg"
-	# if 'output' in image:
-	# 	print("convert")
-	# 	# image = image.encode("ascii")
-	# 	version = image[20 : -4]
-	# 	new_version = int(version) + 1
-	# 	output_name = image[:20] + str(new_version) + image[-4 :]
-
-	print(output_name)
-
 	send_request(process_url, image, actions, output_name)
 
 	return jsonify({'image_url': output_name})

@@ -6,7 +6,7 @@ from cv2 import cv2
 
 addr = 'http://localhost:5001'
 
-process_url = addr + '/process'
+process_url = addr + '/imageprocessor'
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ app = Flask(__name__)
 def home():
 	return render_template('index.html', oriImg=None, newImg=None, actions=None)
 
-@app.route('/process', methods=['POST', 'GET'])
+@app.route('/imageprocess', methods=['POST', 'GET'])
 def process_image():
 	image = request.form['file']
 	actions = request.form['action']

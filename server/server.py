@@ -7,7 +7,7 @@ import json
 app = Flask(__name__)
 
 
-@app.route('/process', methods=['POST'])
+@app.route('/imageprocessor', methods=['POST'])
 def process():
     image = request.data
     params = request.args

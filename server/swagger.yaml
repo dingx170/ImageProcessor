@@ -1,0 +1,49 @@
+swagger: "2.0"
+info:
+  description: "This RESTful API provides a simple image processing service. It allows users to send an image and a combination of desired operations in order to process the image."
+  version: "2.0.0"
+  title: "Image Processor"
+  contact:
+    email: "dingtong@seattleu.edu"
+basePath: "/"
+consumes: 
+  - application/x-www-form-urlencoded
+paths:
+  /imageprocessor:
+    post:
+      tags:
+      - "Image Processor"
+      summary: Processes a given image with given operations in order
+      description: Takes in an image and a combination of desired operations, then processes the image with operations in order. 
+      parameters:
+      - in: "formData"
+        name: "image"
+        description: "the image data in the form of binary as a string"
+        required: true
+        type: "string"
+      - in: "formData"
+        name: "params"
+        description: "the combination of operations and related params in the form of JSON as a string"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: OK
+        404:
+          description: Not Found
+        500: 
+          description: Internal Server Error
+ 
+definitions:
+  Request:
+    type: "object"
+    properties:
+      data:
+        type: "string"
+        format: "string"
+  ApiResponse:
+    type: "object"
+    properties:
+      data:
+        type: "string"
+        format: "string"

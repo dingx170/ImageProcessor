@@ -25,7 +25,8 @@ footer {
 }
 
 .image-container {
-    min-height: 150px;
+    min-height: 220px;
+    flex-direction: row;
 }
 
 .operation-container {
